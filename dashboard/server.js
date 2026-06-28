@@ -36,8 +36,8 @@ app.get('/api/accounts', async (req, res) => {
         GROUP BY account_id
       ) c ON m.account_id = c.account_id
       WHERE m.month = '${month}'
-      ORDER BY m.ahi_score ASC
-      LIMIT 200
+      ORDER BY m.account_id ASC
+      LIMIT 1200
     `);
     res.json(rows);
   } catch(e) {
@@ -91,3 +91,4 @@ app.get('/api/portfolio', async (req, res) => {
 app.get('/health', (req, res) => res.json({status: 'ok', timestamp: new Date()}));
 
 app.listen(3001, () => console.log('AHI proxy running on http://localhost:3001'));
+app.use(express.static(path.join(__dirname)));
