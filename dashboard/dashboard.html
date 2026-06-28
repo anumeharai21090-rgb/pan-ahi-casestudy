@@ -61,7 +61,7 @@ tr:hover td{background:#f9fafb}
     <div class="header-title">Account Health Index (AHI) — Global Customer Services</div>
     <div class="header-sub">Palo Alto Networks · December 2025 · Principal PM Initiative</div>
   </div>
-  <div class="live-badge">
+  <select id="monthPicker" onchange="changeMonth()" style="font-size:13px;padding:6px 12px;border-radius:8px;border:1px solid #d1d5db;background:#fff;color:#374151;cursor:pointer;font-weight:600"><option value="2025-01-01">Jan 2025</option><option value="2025-02-01">Feb 2025</option><option value="2025-03-01">Mar 2025</option><option value="2025-04-01">Apr 2025</option><option value="2025-05-01">May 2025</option><option value="2025-06-01">Jun 2025</option><option value="2025-07-01">Jul 2025</option><option value="2025-08-01">Aug 2025</option><option value="2025-09-01">Sep 2025</option><option value="2025-10-01">Oct 2025</option><option value="2025-11-01">Nov 2025</option><option value="2025-12-01" selected>Dec 2025</option></select><div class="live-badge">
     <span class="live-dot"></span>
     Live · BigQuery
   </div>
@@ -163,6 +163,8 @@ tr:hover td{background:#f9fafb}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
 const API = 'http://localhost:3001';
+let selectedMonth = '2025-12-01';
+function changeMonth(){ selectedMonth = document.getElementById('monthPicker').value; loadPortfolio(); loadCSM(); loadAccounts(); }
 const STATUS_COLORS = {Healthy:'#16a34a',Monitor:'#ca8a04','At Risk':'#ea580c',Critical:'#dc2626',Churning:'#9d174d'};
 const STATUS_CLASS = {Healthy:'b-healthy',Monitor:'b-monitor','At Risk':'b-atrisk',Critical:'b-critical',Churning:'b-churning'};
 
@@ -199,7 +201,7 @@ function showView(id,btn){
 
 async function loadPortfolio(){
   try{
-    const res = await fetch(`${API}/api/portfolio`);
+    const res = await fetch(`${API}/api/portfolio?month=${selectedMonth}`);
     const rows = await res.json();
 
     const totalAccounts = rows.reduce((a,r)=>a+(r.count||0),0);
@@ -234,7 +236,7 @@ async function loadPortfolio(){
 
 async function loadCSM(){
   try{
-    const res = await fetch(`${API}/api/csm`);
+    const res = await fetch(`${API}/api/csm?month=${selectedMonth}`);
     allCSM = await res.json();
     renderCSM(allCSM);
 
@@ -295,7 +297,7 @@ function filterCSM(){
 
 async function loadAccounts(){
   try{
-    const res = await fetch(`${API}/api/accounts`);
+    const res = await fetch(`${API}/api/accounts?month=${selectedMonth}`);
     allAccounts = await res.json();
 
     const industries = [...new Set(allAccounts.map(r=>r.industry).filter(Boolean))].sort();
