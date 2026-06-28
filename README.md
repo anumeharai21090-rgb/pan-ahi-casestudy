@@ -10,7 +10,12 @@ Built as part of the Principal IT PM, Data Analytics case study. This repo conta
 
 | Deliverable | Location | Description |
 |---|---|---|
-| Product & Technical Spec | `/specs/AHI_Spec.md` | 14-section PRD defining formula, weights, edge case handling, DQ tests, evaluation framework |
+| Pitch Deck | `/docs/AHI_Pitch_Deck.pptx` | Executive presentation: problem, AHI definition, formula, adoption path, AI workflow |
+| PRD | `/docs/AHI_PRD.docx` | Full 14-section product & technical spec: formula, weights, edge cases, DQ framework, evaluation criteria |
+| Assumptions | `/docs/AHI_Assumptions.docx` | Standalone assumptions doc: edge case rates, weight rationale, threshold grounding, what needs shadow-period validation |
+| Technical Walkthrough | `/docs/AHI_Walkthrough.docx` | End-to-end narrative: data model, pipeline logic, DQ gates, dashboard architecture |
+| Technical Appendix | `/docs/Technical_Appendix.md` | Reference: full SQL with inline comments, Isolation Forest logic, overage formula, ARR-weighted rollup |
+| Product & Technical Spec | `/specs/AHI_Spec.md` | Original markdown spec (superseded by PRD docx) |
 | Data Generation | `/data_generation/generate_data_FINAL.py` | Python script generating 5 synthetic tables (1,000 accounts, 214K+ usage rows, 5 deliberate edge cases) |
 | BigQuery SQL Pipeline | `/pipeline_and_tests/ahi_pipeline_bigquery.sql` | 6-step SQL pipeline: source tables → staging → account_ahi_monthly + csm_ahi_monthly |
 | Local Python Pipeline | `/pipeline_and_tests/ahi_pipeline_runner.py` | Pandas mirror of BigQuery pipeline for local development |
@@ -40,6 +45,8 @@ Scored 0–100 per account per month. Rolled up to CSM level as ARR-weighted ave
 | 50–64 | At Risk | 60-day recovery plan |
 | 35–49 | Critical | Executive engagement |
 | Below 35 | Churning | Immediate escalation |
+
+> **Key principle:** Success is not defined by AHI score accuracy. It is defined by renewal rate improvement. AHI is a leading indicator; renewal rate is the lagging validator.
 
 ---
 
@@ -158,11 +165,18 @@ Runs against CSV files before BigQuery upload. Outputs quarantine log and JSON r
 ## Repo Structure
 
 ```
+/docs
+  AHI_Pitch_Deck.pptx          ← executive presentation
+  AHI_PRD.docx                 ← full product & technical specification
+  AHI_Assumptions.docx         ← design assumptions and validation plan
+  AHI_Walkthrough.docx         ← end-to-end technical narrative
+  Technical_Appendix.md        ← SQL reference, formulas, implementation detail
+
 /data_generation
   generate_data_FINAL.py       ← synthetic data generation
 
 /specs
-  AHI_Spec.md                  ← full product & technical specification
+  AHI_Spec.md                  ← original markdown spec
 
 /pipeline_and_tests
   ahi_pipeline_bigquery.sql    ← BigQuery SQL pipeline (Steps 1–6)
